@@ -1,0 +1,75 @@
+[
+  {
+    "sourceId": "cloudflare-greenhouse",
+    "company": {
+      "id": "company-cloudflare",
+      "slug": "cloudflare",
+      "name": "Cloudflare",
+      "domain": "cloudflare.com",
+      "careerUrl": "https://www.cloudflare.com/careers/",
+      "logoPath": "/company-logos/cloudflare.ico",
+      "initials": "CF",
+      "categoryTags": ["Infrastructure", "Security"],
+      "priorityTier": 1
+    },
+    "displayName": "Cloudflare Greenhouse board",
+    "kind": "greenhouse",
+    "officialUrl": "https://www.cloudflare.com/careers/",
+    "boardToken": "cloudflare",
+    "enabled": true,
+    "rolloutWave": 1,
+    "expectedIntervalMinutes": 120,
+    "minimumRequestIntervalMs": 1500,
+    "requestTimeoutMs": 15000,
+    "closureConfirmationRuns": 2
+  },
+  {
+    "sourceId": "figma-greenhouse",
+    "company": {
+      "id": "company-figma",
+      "slug": "figma",
+      "name": "Figma",
+      "domain": "figma.com",
+      "careerUrl": "https://www.figma.com/careers/",
+      "logoPath": "/company-logos/figma.svg",
+      "initials": "FI",
+      "categoryTags": ["Design", "Developer Tools"],
+      "priorityTier": 2
+    },
+    "displayName": "Figma Greenhouse board",
+    "kind": "greenhouse",
+    "officialUrl": "https://www.figma.com/careers/",
+    "boardToken": "figma",
+    "enabled": true,
+    "rolloutWave": 2,
+    "expectedIntervalMinutes": 120,
+    "minimumRequestIntervalMs": 1500,
+    "requestTimeoutMs": 15000,
+    "closureConfirmationRuns": 2
+  },
+  {
+    "sourceId": "databricks-greenhouse",
+    "company": {
+      "id": "company-databricks",
+      "slug": "databricks",
+      "name": "Databricks",
+      "domain": "databricks.com",
+      "careerUrl": "https://www.databricks.com/company/careers/open-positions",
+      "logoPath": "/company-logos/databricks.svg",
+      "initials": "DB",
+      "categoryTags": ["AI", "Infrastructure"],
+      "priorityTier": 1
+    },
+    "displayName": "Databricks Greenhouse board",
+    "kind": "greenhouse",
+    "officialUrl": "https://www.databricks.com/company/careers/open-positions",
+    "boardToken": "databricks",
+    "enabled": true,
+    "rolloutWave": 3,
+    "expectedIntervalMinutes": 120,
+    "minimumRequestIntervalMs": 1500,
+    "requestTimeoutMs": 15000,
+    "maximumResponseBytes": 12000000,
+    "closureConfirmationRuns": 2
+  }
+]

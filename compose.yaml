@@ -1,0 +1,18 @@
+services:
+  internjobs:
+    build: .
+    environment:
+      NODE_ENV: production
+      PORT: 8787
+      AUTH_MODE: development
+      DATABASE_PATH: /app/data/internjobs.local.db
+      MONITOR_MODE: fixture
+      NOTIFICATION_PROVIDER: development
+    ports:
+      - "8787:8787"
+    volumes:
+      - internjobs-data:/app/data
+    restart: unless-stopped
+
+volumes:
+  internjobs-data:

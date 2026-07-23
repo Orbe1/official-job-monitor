@@ -1,0 +1,26 @@
+{
+  "jobs": [
+    {
+      "id": 9001,
+      "internal_job_id": 7001,
+      "title": "Software Engineer Intern, Infrastructure",
+      "updated_at": "2026-07-09T12:00:00Z",
+      "location": { "name": "New York, NY, United States" },
+      "absolute_url": "https://boards.greenhouse.io/example/jobs/9001",
+      "content": "<p>Join the infrastructure team.</p><p>Current students graduating in 2027 or 2028.</p>",
+      "departments": [{ "name": "Engineering" }],
+      "offices": [{ "name": "New York", "location": "New York, NY, United States" }]
+    },
+    {
+      "id": 9002,
+      "internal_job_id": 7002,
+      "title": "Senior Software Engineer, Infrastructure",
+      "updated_at": "2026-07-08T12:00:00Z",
+      "location": { "name": "San Francisco, CA, United States" },
+      "absolute_url": "https://boards.greenhouse.io/example/jobs/9002",
+      "content": "<p>Requires 7+ years of professional experience.</p>",
+      "departments": [{ "name": "Engineering" }]
+    }
+  ],
+  "meta": { "total": 2 }
+}

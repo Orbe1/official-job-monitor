@@ -1,0 +1,15 @@
+[
+  {
+    "id": "lever-intern-1",
+    "text": "Software Engineering Intern, Security",
+    "categories": { "location": "Washington, DC", "allLocations": ["Washington, DC"], "commitment": "Intern", "team": "Security", "department": "Engineering" },
+    "country": "US",
+    "descriptionPlain": "Internship for current computer science students working on product security.",
+    "lists": [{ "text": "Requirements", "content": "<li>Current undergraduate student</li><li>Programming experience</li>" }],
+    "hostedUrl": "https://jobs.lever.co/example/lever-intern-1",
+    "applyUrl": "https://jobs.lever.co/example/lever-intern-1/apply",
+    "workplaceType": "on-site",
+    "salaryRange": { "currency": "USD", "interval": "per-hour-salary", "min": 55, "max": 70 },
+    "salaryDescriptionPlain": "$55-$70 per hour"
+  }
+]

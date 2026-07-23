@@ -1,0 +1,25 @@
+{
+  "apiVersion": "1",
+  "jobs": [
+    {
+      "title": "New Grad Software Engineer, Developer Platform",
+      "location": "San Francisco, CA",
+      "secondaryLocations": [],
+      "department": "Engineering",
+      "team": "Infrastructure",
+      "isListed": true,
+      "isRemote": false,
+      "workplaceType": "Hybrid",
+      "descriptionPlain": "University graduate role building distributed developer infrastructure.",
+      "publishedAt": "2026-07-08T16:21:55.393Z",
+      "employmentType": "FullTime",
+      "address": { "postalAddress": { "addressLocality": "San Francisco", "addressRegion": "California", "addressCountry": "USA" } },
+      "jobUrl": "https://jobs.ashbyhq.com/example/ashby-new-grad-1",
+      "applyUrl": "https://jobs.ashbyhq.com/example/ashby-new-grad-1/application",
+      "compensation": {
+        "scrapeableCompensationSalarySummary": "$180K - $220K",
+        "summaryComponents": [{ "compensationType": "Salary", "interval": "1 YEAR", "currencyCode": "USD", "minValue": 180000, "maxValue": 220000 }]
+      }
+    }
+  ]
+}
