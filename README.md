@@ -8,19 +8,19 @@ Unlike general job boards and community-maintained lists, InternJobs treats empl
 
 ## Why I built it
 
-Students often track dozens of companies through spreadsheets, GitHub lists, Discord servers, and individual career pages. This makes it easy to discover openings late, forget a company, or confuse an old listing with a newly published one.
+Students often track companies through spreadsheets, GitHub lists, Discord servers, and individual career pages. This makes it easy to discover openings late, forget a company, or confuse an older listing with a newly published one.
 
 InternJobs is designed to:
 
-- monitor official employer hiring sources
-- identify technical internships and explicit new-grad roles
-- distinguish employer publication time from monitor discovery time
-- organize followed companies, saved roles, and applications
-- retain application history after official postings close
+- Monitor official employer hiring sources
+- Identify technical internships and explicit new-grad roles
+- Separate employer publication time from monitor discovery time
+- Organize followed companies, saved roles, and applications
+- Preserve application history after official postings close
 
 ## Current features
 
-### Official-source ingestion
+### Official-source monitoring
 
 Live monitoring is currently enabled for the official Greenhouse boards of:
 
@@ -28,17 +28,17 @@ Live monitoring is currently enabled for the official Greenhouse boards of:
 - Figma
 - Databricks
 
-Every source is normalized into a shared internal job model. Ashby and Lever adapters are also implemented and tested, but are not yet enabled in the reviewed live-source catalog.
+Every source is normalized into a shared internal job model. Ashby and Lever adapters are also implemented and tested but are not yet enabled in the reviewed live-source catalog.
 
 ### Early-career classification
 
 A deterministic classifier evaluates:
 
-- internship and new-grad language
-- software engineering, data science, ML/AI, networking, and infrastructure roles
-- degree and graduation-year requirements
+- Internship and new-grad language
+- Software engineering, data science, ML/AI, networking, and infrastructure roles
+- Degree and graduation-year requirements
 - United States eligibility
-- compensation and work-style language
+- Compensation and work-style information
 
 Postings are classified as included, excluded, or review-required so uncertain roles are not silently presented as valid matches.
 
@@ -46,13 +46,13 @@ Postings are classified as included, excluded, or review-required so uncertain r
 
 InternJobs tracks official postings across repeated source checks and supports:
 
-- duplicate prevention
-- idempotent updates
-- content-change detection
-- first-seen and last-seen timestamps
-- closure confirmation across multiple successful scans
-- reopen detection using stable source IDs
-- preservation of saved and applied roles after closure
+- Duplicate prevention
+- Idempotent updates
+- Content-change detection
+- First-seen and last-seen timestamps
+- Closure confirmation across multiple successful scans
+- Reopening detection using stable source IDs
+- Preservation of saved and applied roles after closure
 
 Failed, partial, malformed, protected, or suspiciously empty scans cannot close active jobs.
 
@@ -63,23 +63,23 @@ The React interface includes:
 - Discover
 - Following
 - My Roles
-- search and filtering
-- saved opportunities
-- application-stage tracking
-- role and company details
-- official-source health information
+- Search and filtering
+- Saved opportunities
+- Application-stage tracking
+- Role and company details
+- Official-source health information
 
 ## Engineering highlights
 
 ### Bulk-first ingestion
 
-Large career boards can expose hundreds of unrelated senior positions. The ingestion pipeline performs one description-aware bulk request, classifies postings in memory, and requests individual job details only for possible student or early-career roles.
+Large company career boards can contain hundreds of unrelated positions. The ingestion pipeline performs a description-aware bulk request, classifies postings in memory, and requests individual job details only for possible student or early-career roles.
 
-For the Databricks Greenhouse board, this reduced first-run requests from:
+For the Databricks Greenhouse board, this reduced initial ingestion from:
 
-- **802 requests to 6**
+- **802 requests to 6 requests**
 
-Repeat scans normally require only the single bulk-board request when no qualifying posting has changed.
+Repeat scans normally require only one bulk-board request when no qualifying posting has changed.
 
 ### Compact posting ledger
 
@@ -98,7 +98,7 @@ All **1,235 official posting IDs** remain tracked for changes, closures, and reo
 
 InternJobs stores four separate timestamps:
 
-- `source_published_at` — when the employer first published the role
+- `source_published_at` — when the employer published the role
 - `source_updated_at` — when the employer last updated it
 - `first_seen_at` — when InternJobs first detected it
 - `last_seen_at` — the latest successful observation
@@ -123,15 +123,7 @@ Express API
 React interface
 ```
 
-Monitoring runs independently from user-facing API requests so a slow or unavailable employer source cannot block the application.
-
-## AI-assisted development
-
-I used Codex as a default engineering collaborator for architecture exploration, implementation, debugging, test generation, and code review.
-
-I retained ownership of product requirements, source policy, data modeling, and final implementation decisions. Changes were accepted only after inspecting the code, running the validation suite, and checking behavior against official ATS responses.
-
-Human judgment was especially important when separating employer publication dates from discovery dates and preventing failed or suspicious scans from incorrectly closing valid roles.
+Monitoring runs independently from user-facing API requests, preventing a slow or unavailable employer source from blocking the application.
 
 ## Technology
 
@@ -148,25 +140,25 @@ Human judgment was especially important when separating employer publication dat
 
 - Greenhouse public Job Board API
 - Ashby and Lever source adapters
-- deterministic classification
-- compensation and requirements extraction
-- lifecycle and source-health monitoring
-- append-only database migrations
+- Deterministic job classification
+- Compensation and requirement extraction
+- Posting lifecycle and source-health monitoring
+- Versioned database migrations
 
-### Quality
+### Testing and quality
 
 - Vitest
 - Testing Library
 - Supertest
 - ESLint
 - TypeScript type checking
-- production build validation
+- Production build validation
 
-The test suite contains more than **200 tests** covering classification, ingestion, lifecycle behavior, persistence, API responses, and interface rendering.
+The project contains more than **200 tests** covering classification, ingestion, lifecycle behavior, persistence, API responses, and interface rendering.
 
 ## Run locally
 
-Requirements:
+### Requirements
 
 - Node.js 22 or newer
 - npm
@@ -178,7 +170,7 @@ npm ci
 npm run dev
 ```
 
-Open:
+Open the application at:
 
 ```text
 http://127.0.0.1:5173/discover
@@ -199,12 +191,12 @@ InternJobs is a working local prototype using live public Greenhouse data.
 Currently:
 
 - SQLite is the configured database
-- authentication uses a local development identity
-- monitoring is explicit, local, and rate-limited
-- notifications and email delivery remain development-only
-- no public deployment is currently available
+- Authentication uses a local development identity
+- Monitoring is local and rate-limited
+- Notifications and email delivery remain development-only
+- No public deployment is currently available
 
-The next milestones are enabling reviewed Ashby sources, adding continuous integration, and creating a public read-only deployment.
+Planned milestones include enabling reviewed Ashby sources, adding continuous integration, and creating a public read-only deployment.
 
 ## Documentation
 
