@@ -2,7 +2,7 @@
 
 InternJobs monitors official company hiring sources to help computer science students discover internships and new-grad roles before they miss them.
 
-![InternJobs Discover page showing live roles from official company sources] (docs/images/internjobs-discover.png)
+![InternJobs Discover page showing live roles from official company sources](docs/images/internjobs-discover.png)
 
 Unlike general job boards and community-maintained lists, InternJobs treats employer career systems as the source of truth. It preserves official publication dates, detects posting changes and closures, and keeps saved application history after a role disappears.
 
