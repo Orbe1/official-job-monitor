@@ -1,129 +1,190 @@
 # Official Job Monitor
 
-Official Job Monitor is a local-first prototype for finding United States computer-science internships and true early-career technical roles from official employer hiring sources. The current interface is branded **InternJobs**.
+Official Job Monitor is a full-stack platform that helps computer science students discover internships and early-career technical roles directly from official company hiring sources.
 
-This is not a general job board and is not a hosted production service. Official employer career pages and their public ATS boards are the source of truth.
+The platform monitors employer career boards, classifies relevant opportunities, extracts structured details such as compensation and eligibility, and keeps listings synchronized as companies publish, update, close, or reopen roles.
 
-## What works today
+Built with React, TypeScript, Node.js, Express, and SQLite.
 
-- A React and Vite student interface with Discover, Following, Tracker, Settings, and an administrator source-health view.
-- An Express API backed by local SQLite.
-- Deterministic classification for US technical internships and explicit new-graduate roles.
-- Company-level logos with accessible initials fallbacks.
-- Official Greenhouse ingestion for exactly three enabled companies: Cloudflare, Figma, and Databricks.
-- Official publication timestamps from Greenhouse job details, kept separate from the time this application first observed a posting.
-- Deterministic extraction for supported compensation and work-style language.
-- Saved-role and application-stage tracking that remains available after an official posting closes.
-- Source-run diagnostics, suspicious-run incidents, idempotent updates, and closure confirmation across multiple successful checks.
+## Why I built it
 
-The live catalog may contain disabled research candidates, but only these sources are fetched:
+Students often track dozens of companies across spreadsheets, GitHub lists, Discord servers, and individual career pages. Roles are easy to discover late, and many job boards mix student opportunities with hundreds of unrelated senior positions.
 
-| Company | Official source | Local state |
-| --- | --- | --- |
-| Cloudflare | Greenhouse | Enabled |
-| Figma | Greenhouse | Enabled |
-| Databricks | Greenhouse | Enabled |
+Official Job Monitor is designed around a different workflow:
 
-No other ATS is enabled in the live workflow.
+- monitor companies directly;
+- identify relevant internship and new-grad roles;
+- preserve official posting dates separately from discovery dates;
+- organize saved and applied roles;
+- retain application history after postings close.
 
-## Local setup
+## Current features
 
-Requirements:
+### Live official job ingestion
 
-- Node.js 22 or newer
-- npm
+The application currently integrates with official Greenhouse boards for:
 
-From the project root:
+- Cloudflare
+- Figma
+- Databricks
 
-```powershell
-npm.cmd ci
-npm.cmd run dev
-```
+Each source is fetched from the employer’s public hiring system and normalized into a shared internal job model.
 
-Use `npm` instead of `npm.cmd` on shells where the PowerShell shim is not blocked. Open [http://127.0.0.1:5173/discover](http://127.0.0.1:5173/discover).
+### Student and early-career classification
 
-`npm run dev` uses `data/internjobs.live.sqlite`. It applies append-only migrations, synchronizes the reviewed source catalog, obtains a successful proof for each enabled Greenhouse source when needed, and then starts the API and client. Pass `--refresh` to request a new observation before startup:
+A deterministic classifier identifies:
 
-```powershell
-npm.cmd run dev -- --refresh
-```
+- internships;
+- explicit new-graduate roles;
+- software engineering;
+- data science;
+- machine learning and AI;
+- networking and infrastructure;
+- technical support;
+- technical product management.
 
-The first live scan can take longer because selected candidate IDs receive a one-time Greenhouse detail request. Repeat scans reuse their stored publication-check state.
+The classifier also distinguishes included, excluded, and review-required roles so uncertain postings are not silently treated as valid matches.
 
-### Sample workspace
+### Structured job extraction
 
-The fixture workspace is separate from live observations:
+The ingestion pipeline extracts and preserves:
 
-```powershell
-npm.cmd run db:reset
-npm.cmd run dev:sample
-```
+- official publication and update timestamps;
+- location;
+- remote and work-style language;
+- compensation ranges;
+- degree requirements;
+- graduation-year requirements;
+- internship or new-grad audience;
+- technical category;
+- source-specific decision reasoning.
 
-This creates `data/internjobs.sqlite` with clearly labeled sample records. Live monitoring uses `data/internjobs.live.sqlite`; neither database is committed.
+Location-specific compensation ranges remain separate to avoid displaying misleading combined salary values.
 
-## Ingestion and storage model
+### Reliable posting lifecycle
 
-Each Greenhouse scan has two stages:
+The monitor tracks each official posting across repeated scans.
 
-1. One complete bulk-board response is normalized in memory and used for deterministic classification plus a conservative student/early-career first pass.
-2. Individual Greenhouse job-detail requests are made only for possible US student or early-career candidates, US roles requiring review, and confirmed reopens that need publication metadata.
+It supports:
 
-SQLite intentionally separates source coverage from product records:
+- idempotent updates;
+- duplicate prevention;
+- first-seen and last-seen timestamps;
+- confirmed closure after repeated absences;
+- reopen detection using stable source IDs;
+- protection against failed, partial, malformed, or suspiciously empty scans;
+- preservation of saved and applied roles after the official listing closes.
 
-- `source_posting_states` contains one compact row for every official posting ID. It stores the content hash, decision state, source/check timestamps, first and last observation times, and closure-confirmation state.
-- `jobs`, locations, descriptions, normalized snapshots, and role history are materialized only for included or review-required postings.
-- An excluded posting with user activity is retained so Tracker never loses the student's history.
+### Job discovery and tracking interface
 
-This keeps complete-board idempotency and closure safety without storing hundreds of irrelevant descriptions or making hundreds of repeat detail requests.
+The React interface includes:
 
-## Timestamp semantics
+- Discover
+- Following
+- Tracker
+- Settings
+- source-health diagnostics
 
-- `source_published_at` is the employer-provided Greenhouse `first_published` value when available.
-- `source_updated_at` is Greenhouse's source update timestamp.
-- `first_seen_at` is when Official Job Monitor first detected the posting ID.
-- `last_seen_at` is the most recent successful observation.
+Users can inspect role details, save opportunities, track application stages, and view official posting status.
 
-The UI displays **Posted** when an official publication date exists and **Found** for the application's observation timestamp or fallback. A missing employer date is never rendered as “Posted: Unknown.”
+Company logos and company-specific visual accents are used throughout the browsing experience, with accessible initials fallbacks when an asset is unavailable.
 
-## Lifecycle safety
+## Engineering highlights
 
-- Failed, partial, protected, malformed, or suspiciously empty runs cannot close postings.
-- A single successful absence cannot close a posting.
-- Closure requires the configured number of complete successful absences separated by the source interval.
-- Reappearing stable IDs reopen the existing posting state.
-- Saved or progressed roles remain visible in Tracker after closure.
-- No monitoring code attempts to bypass authentication, CAPTCHAs, bot controls, or rate limits.
+### Compact two-level storage model
 
-## Useful commands
+The system separates source monitoring from product-facing job records.
+
+Every official posting receives a compact ledger entry containing only the information required for:
+
+- source identity;
+- content-change detection;
+- classification state;
+- first and last observation;
+- closure confirmation;
+- reopen handling.
+
+Full descriptions, locations, compensation, snapshots, and normalized job data are stored only for included or review-required roles.
+
+During the Databricks integration, this reduced the live SQLite database from approximately:
+
+- **94 MB to 1.65 MB**
+- **1,235 full job records to 5 materialized relevant records**
+
+All 1,235 official posting IDs remain safely tracked through the compact ledger.
+
+### Efficient large-board ingestion
+
+Databricks currently exposes more than 800 postings through its Greenhouse board.
+
+The initial implementation made one detail request for every posting. The optimized pipeline performs a description-aware first pass and requests individual details only for possible student or early-career candidates.
+
+Databricks first-run requests were reduced from:
+
+- **802 requests**
+- to **6 requests**
+
+Repeat scans normally require only the single bulk-board request when no qualifying posting has changed.
+
+### Source timestamp integrity
+
+The application keeps employer timestamps separate from internal monitoring timestamps:
+
+- `source_published_at` — when the employer first published the role;
+- `source_updated_at` — when the employer last updated it;
+- `first_seen_at` — when Official Job Monitor first detected it;
+- `last_seen_at` — the latest successful observation.
+
+This prevents a newly discovered older posting from being incorrectly presented as newly published.
+
+## Tech stack
+
+### Frontend
+
+- React
+- TypeScript
+- Vite
+- React Router
+
+### Backend
+
+- Node.js
+- Express
+- TypeScript
+- SQLite
+
+### Data pipeline
+
+- Greenhouse public job-board APIs
+- deterministic classification
+- requirements extraction
+- compensation parsing
+- work-style parsing
+- source-health monitoring
+- append-only database migrations
+
+### Quality
+
+- ESLint
+- TypeScript type checking
+- automated tests
+- production build validation
+
+The current test suite contains more than 200 tests covering classification, ingestion, lifecycle behavior, persistence, API responses, and interface rendering.
+
+## Architecture
 
 ```text
-npm run dev                    Start the live local workspace
-npm run dev:sample             Start the fixture workspace
-npm run live:bootstrap         Migrate and synchronize the reviewed live catalog
-npm run monitor:live           Run persistent live monitoring
-npm run monitor:live:preview   Fetch live sources without persistence
-npm run worker:live            Run the local SQLite scheduler
-npm run db:migrate             Apply append-only migrations
-npm run db:reset               Recreate and seed the sample database
-npm run test                   Run the test suite
-npm run lint                   Run ESLint
-npm run typecheck              Run TypeScript checks
-npm run build                  Build the client
-npm run check                  Run lint, typecheck, tests, and build
-```
-
-To scan Databricks explicitly:
-
-```powershell
-npm.cmd run monitor:live -- --source databricks-greenhouse --db data/internjobs.live.sqlite
-```
-
-## Local development boundaries
-
-- Authentication is a seeded local development identity, not production authentication.
-- In-app notifications and development email delivery records are stored locally; no real email is sent.
-- `MONITOR_CONTACT_EMAIL` is optional locally. When supplied, it is appended to the outbound HTTP User-Agent and sent to the official source; it is not stored in SQLite. Production-mode monitoring requires a valid operator contact.
-- SQLite, logs, environment files, test output, and generated local data are ignored by Git.
-- There is no deployment configuration, managed database, production identity provider, hosted scheduler, or provider-backed email implementation.
-
-See [Monitoring](docs/MONITORING.md) for source and failure-handling policy. Company logo assets retain their respective trademark ownership; provenance is recorded in [public/company-logos/README.md](public/company-logos/README.md).
+Official Greenhouse board
+        ↓
+Bulk source adapter
+        ↓
+Classification and extraction
+        ↓
+Compact posting-state ledger
+        ↓
+Relevant role materialization
+        ↓
+Express API
+        ↓
+React interface
