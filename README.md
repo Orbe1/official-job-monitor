@@ -1,28 +1,28 @@
-# InternJobs
+# Job Monitor
 
-InternJobs monitors official company hiring sources to help computer science students discover internships and new-grad roles before they miss them.
+Job Monitor is a full-stack application that monitors official company hiring sources to help computer science students discover internships and new-grad roles before they miss them.
 
-![InternJobs Discover page showing live roles from official company sources](docs/images/internjobs-discover.png)
+![Discover page showing live roles from company hiring sources](docs/images/internjobs-discover.png)
 
-Unlike general job boards and community-maintained lists, InternJobs treats employer career systems as the source of truth. It preserves official publication dates, detects posting changes and closures, and keeps saved application history after a role disappears.
+Unlike general job boards and community-maintained lists, Job Monitor treats employer career systems as the source of truth. It preserves publication dates, detects posting changes and closures, and keeps saved application history after a role disappears.
 
 ## Why I built it
 
 Students often track companies through spreadsheets, GitHub lists, Discord servers, and individual career pages. This makes it easy to discover openings late, forget a company, or confuse an older listing with a newly published one.
 
-InternJobs is designed to:
+Job Monitor is designed to:
 
 - Monitor official employer hiring sources
 - Identify technical internships and explicit new-grad roles
 - Separate employer publication time from monitor discovery time
 - Organize followed companies, saved roles, and applications
-- Preserve application history after official postings close
+- Preserve application history after postings close
 
 ## Current features
 
-### Official-source monitoring
+### Source monitoring
 
-Live monitoring is currently enabled for the official Greenhouse boards of:
+Live monitoring is currently enabled for the Greenhouse boards of:
 
 - Cloudflare
 - Figma
@@ -44,7 +44,7 @@ Postings are classified as included, excluded, or review-required so uncertain r
 
 ### Posting lifecycle tracking
 
-InternJobs tracks official postings across repeated source checks and supports:
+Job Monitor tracks postings across repeated source checks and supports:
 
 - Duplicate prevention
 - Idempotent updates
@@ -67,7 +67,7 @@ The React interface includes:
 - Saved opportunities
 - Application-stage tracking
 - Role and company details
-- Official-source health information
+- Source-health information
 
 ## Engineering highlights
 
@@ -85,22 +85,22 @@ Repeat scans normally require only one bulk-board request when no qualifying pos
 
 The database separates source monitoring from product-facing job records.
 
-Every official posting receives a compact ledger entry containing its stable identity, content hash, classification state, observation timestamps, and lifecycle state. Full descriptions and normalized job data are stored only for included or review-required roles.
+Every posting receives a compact ledger entry containing its stable identity, content hash, classification state, observation timestamps, and lifecycle state. Full descriptions and normalized job data are stored only for included or review-required roles.
 
 This reduced the live SQLite database from:
 
 - **94 MB to 1.65 MB**
 - **1,235 full records to 5 materialized relevant records**
 
-All **1,235 official posting IDs** remain tracked for changes, closures, and reopenings.
+All **1,235 posting IDs** remain tracked for changes, closures, and reopenings.
 
 ### Timestamp integrity
 
-InternJobs stores four separate timestamps:
+Job Monitor stores four separate timestamps:
 
 - `source_published_at` — when the employer published the role
 - `source_updated_at` — when the employer last updated it
-- `first_seen_at` — when InternJobs first detected it
+- `first_seen_at` — when the monitor first detected it
 - `last_seen_at` — the latest successful observation
 
 This prevents an older posting discovered today from being incorrectly displayed as newly published.
@@ -108,7 +108,7 @@ This prevents an older posting discovered today from being incorrectly displayed
 ## Architecture
 
 ```text
-Official ATS boards
+Company hiring systems
         ↓
 Source adapters
         ↓
@@ -186,7 +186,7 @@ This runs linting, type checking, automated tests, and the production build.
 
 ## Current status
 
-InternJobs is a working local prototype using live public Greenhouse data.
+Job Monitor is a working local prototype using live public Greenhouse data.
 
 Currently:
 
